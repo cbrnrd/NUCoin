@@ -1,0 +1,24 @@
+{
+  "name": "tutorialtoken",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^1.0.42",
+    "ganache-cli": "^6.10.1",
+    "lite-server": "^2.3.0",
+    "openzeppelin-solidity": "^3.1.0"
+  },
+  "dependencies": {
+    "solc": "^0.6.0"
+  }
+}
