@@ -23,3 +23,4 @@ The most recent version of NUCoin is available on the Ropsten testnet at contrac
 * Add a function that allows for an authoritative address to view the balance of a student's account.
 * Implement SafeMath
 * Make some graphics for the project. Logo, etc.
+* Write tests
