@@ -17,7 +17,7 @@ As of right now, this is a very simple token that is mintable by select authorit
 There is also the question of gas fees. As written, each student would pay for gas fees on each transaction. However, if the contract is updated to use the [Gas Station Network (GSN)](https://www.opengsn.org/), the school (or rather, the original authority) would pay for gas on each transaction. This can be offset by charging a small premium on each token.
 
 ## How can I use it?
-The most recent version of NUCoin is available on the Ropsten testnet at contract address [0x892fd2F2A96Ef67F43cAe3608c456950b2898d4E](https://ropsten.etherscan.io/address/0x892fd2F2A96Ef67F43cAe3608c456950b2898d4E).
+The most recent version of NUCoin is available on the Ropsten testnet at contract address [0x000527a774561be4161710C8d53aC09703096aC1](https://ropsten.etherscan.io/address/0x000527a774561be4161710C8d53aC09703096aC1).
 
 ### TODO
 * Add a function that allows for an authoritative address to view the balance of a student's account.

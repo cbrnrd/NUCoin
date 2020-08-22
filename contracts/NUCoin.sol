@@ -1,11 +1,25 @@
 pragma solidity >=0.6.0;
 
+import "./SafeMath.sol";
+
+/*
+    This contract is a token meant to replace Northeastern University's Husky Dollars and meal swipe programs.
+    One pitfall of using a blockchain like this for payments is transaction time. One way to speed this up
+    is for the people charging the students (dining hall, restaurants, etc), check the balance of the student
+    address before charging them. This will ensure that a student has sufficient funds (or not) to make that purchase.
+    If all checks out, the student can send the coins to the charger.
+
+    Another way to do this to make it easier on the students is to add each charging address as an authority and then call transferFrom.
+    This would remove the need for students paying for gas fees.
+*/
 contract NUCoin {
+
+    using SafeMath for uint256;
+
     string public constant name = "NUCoin";
     string public constant symbol = "NU";
     string public constant standard = "NUCoin";
     uint8 public constant decimals = 2;
-    uint64 private constant INITIAL_SUPPLY = 1000000000000;
     address private initial_authority;
     //address[] public authorities;
 
@@ -15,37 +29,35 @@ contract NUCoin {
         uint256 _value
     );
 
-    // Keeps track of the balances of all addresses.
-    // This is kept private for the privacy of the students (AKA so students can't see how much other people have in their account).
-    mapping(address => uint256) private balances;
+    // Keeps track of the _balances of all addresses.
+    mapping(address => uint256) private _balances;
 
     // Keeps track of which addresses are authoritative.
-    mapping(address => bool) public authorities;
+    mapping(address => bool) private authorities;
 
     // Sets the initial authority address and gives that address the INITIAL_SUPPLY of coins.
     constructor() public {
         initial_authority = msg.sender;
         authorities[initial_authority] = true;
-        balances[msg.sender] = INITIAL_SUPPLY;
     }
 
     // Transfers a given amount of coins to the given address from the senders address.
     function transfer(address _to, uint256 _value) public returns (bool success) {
-        require(balances[msg.sender] >= _value, "NUCoin/Economy/Insufficient funds to send.");
+        require(_balances[msg.sender] >= _value, "NUCoin/Economy/Insufficient funds to send.");
 
-        balances[msg.sender] -= _value;
-        balances[_to] += _value;
+        _balances[msg.sender] -= _value;
+        _balances[_to] += _value;
 
         emit Transfer(msg.sender, _to, _value);
 
         return true;
     }
 
-    // Gets the balance of the calling account.
-    // This isn't working right. Check etherscan: always returns 3963877391197344453575983046348115674221700746820753546331534351508065746944 no matter the address.
-    function balanceOf(address _) external view returns (uint256 balance) {
-        require(_ == msg.sender, "NUCoin/Privacy/Cannot view another account's balance.");
-        return balances[msg.sender];
+    // Gets the balance of the given account.
+    // I realized there's no real way to hide a student's balance because msg.sender can be spoofed for `view` functions.
+    // Also, a student would have to know another student's address to be able to view it anyway.
+    function balanceOf(address _addr) public view returns (uint256 balance) {
+        return _balances[_addr];
     }
 
     // Checks whether the given account is authoritative.
@@ -55,23 +67,26 @@ contract NUCoin {
 
     ////////// Authoritative functions \\\\\\\\\
 
-    // Allows for an authoritative address to view the balance of another account.
-    function authViewBalance(address _addr) external view returns (uint256 balance) {
-        require(isAuthority(msg.sender), "NUCoin/Security/Cannot access authViewBalence as a non-authoritative sender.");
-        return balances[_addr];
-    }
-
     // Deposit funds into a given account. Must be an authoritative address.
     function addFunds(uint256 _amt, address _addr) external returns (bool success) {
         require(isAuthority(msg.sender), "NUCoin/Security/Cannot add funds from a non-authoritative address.");
-        balances[_addr] += _amt;
+        _balances[_addr].add(_amt);
         return true;
     }
 
     // Delete funds from an account. Must be an authoritative address.
     function removeFunds(uint256 _amt, address _addr) external returns (bool success) {
         require(isAuthority(msg.sender), "NUCoin/Security/A non-authoritative address cannot remove funds from another account.");
-        balances[_addr] -= _amt;
+        _balances[_addr].sub(_amt, "NUCoin/Economy/Transfer amount exceeds balance");
+        return true;
+    }
+
+    // Transfers a given amount of coins from `sender` to `recipient`.
+    function transferFrom(address sender, address recipient, uint256 amount) public virtual returns (bool success) {
+        require(isAuthority(msg.sender), "NUCoin/Security/Cannot transferFrom non-authorative address.");
+        _balances[sender] = _balances[sender].sub(amount, "NUCoin/Economy/Transfer amount exceeds balance");
+        _balances[recipient] = _balances[recipient].add(amount);
+        emit Transfer(sender, recipient, amount);
         return true;
     }
 
@@ -85,7 +100,6 @@ contract NUCoin {
     // Removes an accounts authoritative access. Must be an authoritative address.
     function renounceAuthority(address _toRm) public returns (bool success) {
         require(isAuthority(msg.sender), "NUCoin/Security/Cannot remove authority from a non-authoritative address.");
-        //require(isAuthority(_toRm), "NUCoin/Security/Address being removed is not an authority.");
         authorities[_toRm] = false;
         return true;
     }
