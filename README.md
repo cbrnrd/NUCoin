@@ -12,12 +12,12 @@ that the school would likely save thousands of dollars by implementing this beca
 * If implemented, it would probably get them some press coverage lol.
 
 ## Possible improvements
-As of right now, this is a very simple token that is mintable by select addresses (starting with the contract owner). To make it more standard, it could be an [ERC223 token](https://github.com/Dexaran/ERC223-token-standard).
+As of right now, this is a very simple token that is mintable by select authoritative addresses (starting with the contract owner). To make it more standard, it could be an [ERC223 token](https://github.com/Dexaran/ERC223-token-standard).
 
 There is also the question of gas fees. As written, each student would pay for gas fees on each transaction. However, if the contract is updated to use the [Gas Station Network (GSN)](https://www.opengsn.org/), the school (or rather, the original authority) would pay for gas on each transaction. This can be offset by charging a small premium on each token.
 
 ## How can I use it?
-The most recent version of NUCoin is available on the Ropsten testnet at contract address [0x05Eea95162711D88469e825AA574930cE8560F5F](https://ropsten.etherscan.io/address/0x05Eea95162711D88469e825AA574930cE8560F5F).
+The most recent version of NUCoin is available on the Ropsten testnet at contract address [0x892fd2F2A96Ef67F43cAe3608c456950b2898d4E](https://ropsten.etherscan.io/address/0x892fd2F2A96Ef67F43cAe3608c456950b2898d4E).
 
 ### TODO
 * Add a function that allows for an authoritative address to view the balance of a student's account.
