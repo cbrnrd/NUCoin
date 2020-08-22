@@ -42,6 +42,7 @@ contract NUCoin {
     }
 
     // Gets the balance of the calling account.
+    // This isn't working right. Check etherscan: always returns 3963877391197344453575983046348115674221700746820753546331534351508065746944 no matter the address.
     function balanceOf(address _) external view returns (uint256 balance) {
         require(_ == msg.sender, "NUCoin/Privacy/Cannot view another account's balance.");
         return balances[msg.sender];
