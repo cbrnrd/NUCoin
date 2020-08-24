@@ -20,7 +20,5 @@ There is also the question of gas fees. As written, each student would pay for g
 The most recent version of NUCoin is available on the Ropsten testnet at contract address [0x000527a774561be4161710C8d53aC09703096aC1](https://ropsten.etherscan.io/address/0x000527a774561be4161710C8d53aC09703096aC1).
 
 ### TODO
-* Add a function that allows for an authoritative address to view the balance of a student's account.
-* Implement SafeMath
 * Make some graphics for the project. Logo, etc.
 * Write tests
